@@ -35,5 +35,4 @@ services:
     maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
 databases:
   - name: elephant
-    databaseName: postgres # optional (Render may add a suffix)
-    user: postgres # optional
+    databaseName: mydb # optional (Render may add a suffix)
