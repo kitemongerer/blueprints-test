@@ -1,0 +1,31 @@
+services:
+  # A Docker web service
+  - type: web
+    name: blueprint-test
+    runtime: go
+    repo: https://github.com/kitemongerer/blueprints-test.git # optional
+    region: oregon # optional (defaults to oregon)
+    plan: standard # optional (defaults to starter instance type)
+    branch: main # optional (defaults to master)
+    healthCheckPath: /
+    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
+    startCommand: "./app"
+    envVars:
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: lightning
+          property: host # available properties are listed below
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: lightning
+          property: port
+  # A Redis instance
+  - type: redis
+    name: lightning
+    ipAllowList: # required
+      - source: 0.0.0.0/0
+        description: everywhere
+    plan: free # optional (defaults to starter instance type)
+    maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
