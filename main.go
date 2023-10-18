@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,7 +13,15 @@ func main() {
 		port = "8080"
 	}
 
+	i := 0
+
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		i++
+
+		if i > 10 {
+			time.Sleep(10 * time.Second)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		w.Write([]byte("hi"))
 	})))
 }

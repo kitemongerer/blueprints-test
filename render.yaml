@@ -10,29 +10,29 @@ services:
     healthCheckPath: /
     buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
     startCommand: "./app"
-    envVars:
-      - key: REDIS_HOST
-        fromService:
-          type: redis
-          name: lightning
-          property: host # available properties are listed below
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: lightning
-          property: port
-      - key: DB_URL
-        fromDatabase:
-          name: elephant
-          property: connectionString
-  # A Redis instance
-  - type: redis
-    name: lightning
-    ipAllowList: # required
-      - source: 0.0.0.0/0
-        description: everywhere
-    plan: free # optional (defaults to starter instance type)
-    maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
-databases:
-  - name: elephant
-    databaseName: mydb # optional (Render may add a suffix)
+#    envVars:
+#      - key: REDIS_HOST
+#        fromService:
+#          type: redis
+#          name: lightning
+#          property: host # available properties are listed below
+#      - key: REDIS_PORT
+#        fromService:
+#          type: redis
+#          name: lightning
+#          property: port
+#      - key: DB_URL
+#        fromDatabase:
+#          name: elephant
+#          property: connectionString
+#  # A Redis instance
+#  - type: redis
+#    name: lightning
+#    ipAllowList: # required
+#      - source: 0.0.0.0/0
+#        description: everywhere
+#    plan: free # optional (defaults to starter instance type)
+#    maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
+#databases:
+#  - name: elephant
+#    databaseName: mydb # optional (Render may add a suffix)
