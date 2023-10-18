@@ -16,6 +16,7 @@ func main() {
 	i := 0
 
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		println("request: " + time.Now().String())
 		i++
 
 		if i > 10 {
