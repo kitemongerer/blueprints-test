@@ -20,8 +20,11 @@ func main() {
 		i++
 
 		if i > 10 {
+			println("long request: " + time.Now().String())
+
 			time.Sleep(10 * time.Second)
 			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 		w.Write([]byte("hi"))
 	})))
