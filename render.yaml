@@ -7,7 +7,7 @@ services:
     region: oregon # optional (defaults to oregon)
     plan: standard # optional (defaults to starter instance type)
     branch: main # optional (defaults to master)
-    healthCheckPath: /
+    healthCheckPath: /health
     buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
     startCommand: "./app"
 #    envVars:
