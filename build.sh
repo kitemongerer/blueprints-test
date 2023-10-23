@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-#true
-exit 1
+true
+#exit 1
