@@ -14,6 +14,20 @@ func main() {
 		port = "8080"
 	}
 
+	if os.Getenv("SLOW_HEALTHCHECK") != "" {
+		slowHealthcheck(port)
+	} else {
+		defaultServer(port)
+	}
+}
+
+func defaultServer(port string) {
+	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hi"))
+	})))
+}
+
+func slowHealthcheck(port string) {
 	i := 0
 
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

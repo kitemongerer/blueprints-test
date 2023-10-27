@@ -1,6 +1,14 @@
 services:
   # A Docker web service
   - type: web
+    name: nginx
+    runtime: image
+    image:
+      url: docker.io/nginx/nginx:latest
+      creds:
+        fromRegistryCreds:
+          name: dockerhub
+  - type: web
     name: blueprint-test
     runtime: go
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
@@ -10,7 +18,9 @@ services:
     healthCheckPath: /health
     buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
     startCommand: "./app"
-#    envVars:
+    envVars:
+      - key: SLOW_HEALTHCHECK
+        value: "DO_IT"
 #      - key: REDIS_HOST
 #        fromService:
 #          type: redis
