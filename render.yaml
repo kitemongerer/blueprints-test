@@ -4,7 +4,7 @@ services:
     name: nginx
     runtime: image
     image:
-      url: docker.io/nginx/nginx:latest
+      url: docker.io/nginx:latest
       creds:
         fromRegistryCreds:
           name: dockerhub
