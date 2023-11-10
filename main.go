@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -23,6 +24,10 @@ func main() {
 
 func defaultServer(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "server-error") {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		w.Write([]byte("hi"))
 	})))
 }
