@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"strings"
 	"time"
 )
@@ -26,6 +27,10 @@ func defaultServer(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(r.URL.Path, "server-error") {
 			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if strings.Contains(r.URL.Path, "panic") {
+			panic(debug.Stack())
 			return
 		}
 		w.Write([]byte("hi"))
