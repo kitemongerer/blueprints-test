@@ -30,7 +30,7 @@ func defaultServer(port string) {
 			return
 		}
 		if strings.Contains(r.URL.Path, "panic") {
-			panic(debug.Stack())
+			panic(string(debug.Stack()))
 			return
 		}
 		w.Write([]byte("hi"))
