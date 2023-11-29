@@ -33,6 +33,9 @@ func defaultServer(port string) {
 			panic(string(debug.Stack()))
 			return
 		}
+		if strings.Contains(r.URL.Path, "exit") {
+			os.Exit(17)
+		}
 		w.Write([]byte("hi"))
 	})))
 }
