@@ -18,8 +18,10 @@ func main() {
 	}
 
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
+		println("starting with slow healthcheck")
 		slowHealthcheck(port)
 	} else {
+		println("starting with default server")
 		defaultServer(port)
 	}
 }
