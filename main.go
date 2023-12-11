@@ -28,6 +28,8 @@ func main() {
 
 func defaultServer(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("received request at %s\n", r.URL.Path)
+
 		if strings.Contains(r.URL.Path, "server-error") {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -40,7 +42,8 @@ func defaultServer(port string) {
 			os.Exit(17)
 		}
 		if strings.Contains(r.URL.Path, "oom") {
-			oom()
+			go oom()
+			w.Write([]byte("started oom loop"))
 		}
 		w.Write([]byte("hi"))
 	})))
@@ -67,6 +70,7 @@ func slowHealthcheck(port string) {
 func oom() {
 	buf := bytes.NewBuffer([]byte{})
 	for {
+		fmt.Printf("buffer capacity: %d\n", buf.Cap())
 		buf.Grow(1024)
 	}
 }
