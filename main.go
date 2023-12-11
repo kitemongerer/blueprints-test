@@ -72,7 +72,7 @@ func oom() {
 	cap := 1024
 	for {
 		fmt.Printf("buffer capacity: %d\n", buf.Cap())
-		cap += 1024
+		cap *= 2
 		buf.Grow(cap)
 	}
 }
