@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"net/http"
@@ -36,6 +37,9 @@ func defaultServer(port string) {
 		if strings.Contains(r.URL.Path, "exit") {
 			os.Exit(17)
 		}
+		if strings.Contains(r.URL.Path, "oom") {
+			oom()
+		}
 		w.Write([]byte("hi"))
 	})))
 }
@@ -56,4 +60,11 @@ func slowHealthcheck(port string) {
 		}
 		w.Write([]byte("hi"))
 	})))
+}
+
+func oom() {
+	buf := bytes.NewBuffer([]byte{})
+	for {
+		buf.Grow(1024)
+	}
 }
