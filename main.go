@@ -69,8 +69,10 @@ func slowHealthcheck(port string) {
 
 func oom() {
 	buf := bytes.NewBuffer([]byte{})
+	cap := 1024
 	for {
 		fmt.Printf("buffer capacity: %d\n", buf.Cap())
-		buf.Grow(1024)
+		cap += 1024
+		buf.Grow(cap)
 	}
 }
