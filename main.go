@@ -28,6 +28,7 @@ func main() {
 
 func defaultServer(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// i can haz preview?
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
 		if strings.Contains(r.URL.Path, "server-error") {
