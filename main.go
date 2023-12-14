@@ -30,6 +30,7 @@ func defaultServer(port string) {
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
+		// gimme a preview env plz
 		if strings.Contains(r.URL.Path, "server-error") {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
