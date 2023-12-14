@@ -1,13 +1,10 @@
 services:
-  # A Docker web service
-  - type: web
-    name: nginx
-    runtime: image
-    image:
-      url: docker.io/library/nginx:latest
-      creds:
-        fromRegistryCreds:
-          name: dockerhub
+  - type: cron
+    name: blueprint-test-cron
+    runtime: go
+    schedule: "0 * * * *"
+    buildCommand: "true" # ensure it's a string
+    startCommand: date
   - type: web
     name: blueprint-test
     runtime: go
