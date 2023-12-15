@@ -19,7 +19,7 @@ func main() {
 
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
 		println("starting with slow healthcheck")
-		slowHealthcheck(port)
+		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
 	} else {
 		println("starting with default server")
 		defaultServer(port)
@@ -49,14 +49,18 @@ func defaultServer(port string) {
 	})))
 }
 
-func slowHealthcheck(port string) {
-	i := 0
+func slowHealthcheck(port string, duration string) {
+	dur, err := time.ParseDuration(duration)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	start := time.Now()
 
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("%d request (%s) at %s\n", i, r.URL.Path, time.Now().String())
-		i++
+		fmt.Printf("%d seconds request (%s) at %s\n", time.Since(start).Seconds(), r.URL.Path, time.Now().String())
 
-		if i > 10 {
+		if time.Since(start) > dur {
 			println("long request: " + time.Now().String())
 
 			time.Sleep(10 * time.Second)
