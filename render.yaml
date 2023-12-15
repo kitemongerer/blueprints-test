@@ -4,8 +4,8 @@ services:
     name: blueprint-test-cron
     runtime: go
     schedule: "0 * * * *"
-    buildCommand: "true" # ensure it's a string
-    startCommand: "exit 1"
+    buildCommand: "exit 1" # ensure it's a string
+    startCommand: "true"
   - type: web
     name: blueprint-test-crash-loop
     runtime: go
