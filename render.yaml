@@ -1,5 +1,5 @@
 previewsEnabled: true
-servffidadffgsdafesces:
+servffidadffgfesces:
   - type: cron
     name: blueprint-test-cron
     runtime: go
