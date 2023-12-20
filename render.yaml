@@ -1,5 +1,5 @@
 previewsEnabled: true
-servidssdssadffgegesces:
+servidadffgegesces:
   - type: cron
     name: blueprint-test-cron
     runtime: go
