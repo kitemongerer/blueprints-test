@@ -1,4 +1,4 @@
-sesdafsdfsdfrvices:
+sesdafsdfsdffdsarvices:
   - type: cron
     name: blueprint-test-cron
     runtime: go
