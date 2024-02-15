@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"runtime/debug"
@@ -20,6 +21,9 @@ func main() {
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
 		println("starting with slow healthcheck")
 		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
+	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
+		println("starting default server, secondary server, and udp server")
+		portDetectorTest(port)
 	} else {
 		println("starting with default server")
 		defaultServer(port)
@@ -79,4 +83,19 @@ func oom() {
 		cap *= 2
 		buf.Grow(cap)
 	}
+}
+
+func portDetectorTest(port string) {
+	go defaultServer(port)
+	go defaultServer(":")
+
+	addr := net.UDPAddr{
+		Port: 2000,
+		IP:   net.ParseIP("127.0.0.1"),
+	}
+	conn, err := net.ListenUDP("udp", &addr) // code does not block here
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
 }
