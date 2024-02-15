@@ -91,10 +91,10 @@ func portDetectorTest(port string) {
 	println("starting default server 1")
 	go defaultServer(port)
 	println("starting default server 2")
-	go defaultServer("")
+	go defaultServer("0")
 
 	println("starting udp server")
-	s, err := net.ResolveUDPAddr("udp6", ":")
+	s, err := net.ResolveUDPAddr("udp6", ":0")
 	if err != nil {
 		log.Fatalf("error resolving addr on udp: %s", err)
 		return
