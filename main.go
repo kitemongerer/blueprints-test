@@ -88,9 +88,12 @@ func oom() {
 }
 
 func portDetectorTest(port string) {
+	println("starting default server 1")
 	go defaultServer(port)
+	println("starting default server 2")
 	go defaultServer("")
 
+	println("starting udp server")
 	s, err := net.ResolveUDPAddr("udp6", ":")
 	if err != nil {
 		log.Fatalf("error resolving addr on udp: %s", err)
