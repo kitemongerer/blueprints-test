@@ -61,7 +61,7 @@ func slowHealthcheck(port string, duration string) {
 
 	start := time.Now()
 
-	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	err = http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%d seconds request (%s) at %s\n", time.Since(start).Seconds(), r.URL.Path, time.Now().String())
 
 		if time.Since(start) > dur {
@@ -72,7 +72,9 @@ func slowHealthcheck(port string, duration string) {
 			return
 		}
 		w.Write([]byte("hi"))
-	})))
+	}))
+
+	log.Fatalf("error listening on port %s: %s", port, err)
 }
 
 func oom() {
@@ -87,15 +89,19 @@ func oom() {
 
 func portDetectorTest(port string) {
 	go defaultServer(port)
-	go defaultServer(":")
+	go defaultServer("")
 
-	addr := net.UDPAddr{
-		Port: 2000,
-		IP:   net.ParseIP("127.0.0.1"),
-	}
-	conn, err := net.ListenUDP("udp", &addr) // code does not block here
+	s, err := net.ResolveUDPAddr("udp6", ":")
 	if err != nil {
-		panic(err)
+		log.Fatalf("error resolving addr on udp: %s", err)
+		return
 	}
+
+	conn, err := net.ListenUDP("udp4", s)
+	if err != nil {
+		log.Fatalf("error listening on udp: %s", err)
+		return
+	}
+
 	defer conn.Close()
 }
