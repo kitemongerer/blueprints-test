@@ -23,7 +23,7 @@ func main() {
 		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
-		portDetectorTest(port)
+		portDetectorTest()
 	} else {
 		println("starting with default server")
 		defaultServer(port)
@@ -89,8 +89,8 @@ func oom() {
 	}
 }
 
-func portDetectorTest(port string) {
-	go defaultServer(port)
+func portDetectorTest() {
+	go defaultServer("8082")
 	time.Sleep(5 * time.Second)
 
 	udp := startUDP()
