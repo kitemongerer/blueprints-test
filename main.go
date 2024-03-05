@@ -102,6 +102,8 @@ func portDetectorTest(port string) {
 
 	defer conn.Close()
 
+	time.Sleep(5 * time.Second)
+
 	go defaultServer(port)
 
 	// ensure port detector finds delayed ports
