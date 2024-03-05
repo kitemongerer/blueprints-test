@@ -88,15 +88,14 @@ func oom() {
 }
 
 func portDetectorTest(port string) {
+	go defaultServer(port)
+	time.Sleep(5 * time.Second)
+
 	udp := startUDP()
 	defer udp.Close()
 
 	tcp := startTCP()
 	defer tcp.Close()
-
-	time.Sleep(5 * time.Second)
-
-	go defaultServer(port)
 
 	// ensure port detector finds delayed ports
 	time.Sleep(time.Minute)
