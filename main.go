@@ -88,19 +88,11 @@ func oom() {
 }
 
 func portDetectorTest(port string) {
-	s, err := net.ResolveUDPAddr("udp6", ":0")
-	if err != nil {
-		log.Fatalf("error resolving addr on udp: %s", err)
-		return
-	}
+	udp := startUDP()
+	defer udp.Close()
 
-	conn, err := net.ListenUDP("udp4", s)
-	if err != nil {
-		log.Fatalf("error listening on udp: %s", err)
-		return
-	}
-
-	defer conn.Close()
+	tcp := startTCP()
+	defer tcp.Close()
 
 	time.Sleep(5 * time.Second)
 
@@ -109,4 +101,30 @@ func portDetectorTest(port string) {
 	// ensure port detector finds delayed ports
 	time.Sleep(time.Minute)
 	defaultServer("0")
+}
+
+func startUDP() *net.UDPConn {
+	s, err := net.ResolveUDPAddr("udp6", ":0")
+	if err != nil {
+		log.Fatalf("error resolving addr on udp: %s", err)
+	}
+
+	conn, err := net.ListenUDP("udp4", s)
+	if err != nil {
+		log.Fatalf("error listening on udp: %s", err)
+	}
+	return conn
+}
+
+func startTCP() *net.TCPListener {
+	s, err := net.ResolveTCPAddr("tcp", ":0")
+	if err != nil {
+		log.Fatalf("error resolving addr on udp: %s", err)
+	}
+
+	conn, err := net.ListenTCP("udp4", s)
+	if err != nil {
+		log.Fatalf("error listening on udp: %s", err)
+	}
+	return conn
 }
