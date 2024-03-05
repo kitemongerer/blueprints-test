@@ -31,6 +31,8 @@ func main() {
 }
 
 func defaultServer(port string) {
+	log.Printf("starting http server at %s\n", port)
+
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
