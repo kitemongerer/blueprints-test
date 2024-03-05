@@ -122,7 +122,7 @@ func startTCP() *net.TCPListener {
 		log.Fatalf("error resolving addr on udp: %s", err)
 	}
 
-	conn, err := net.ListenTCP("udp4", s)
+	conn, err := net.ListenTCP("tcp", s)
 	if err != nil {
 		log.Fatalf("error listening on udp: %s", err)
 	}
