@@ -108,7 +108,7 @@ func portDetectorTest() {
 }
 
 func portDetectorTest2(port string) {
-	go defaultServer("8082")
+	go defaultServer("10001")
 	defaultServer(port)
 }
 
