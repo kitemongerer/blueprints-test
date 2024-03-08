@@ -24,6 +24,9 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
+	} else if os.Getenv("PORT_DETECTOR_TEST_2") != "" {
+		println("starting port detector test 2")
+		portDetectorTest2(port)
 	} else {
 		println("starting with default server")
 		defaultServer(port)
@@ -102,6 +105,11 @@ func portDetectorTest() {
 	// ensure port detector finds delayed ports
 	time.Sleep(time.Minute)
 	defaultServer("0")
+}
+
+func portDetectorTest2(port string) {
+	go defaultServer("8082")
+	defaultServer(port)
 }
 
 func startUDP() *net.UDPConn {
