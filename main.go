@@ -18,6 +18,10 @@ func main() {
 		port = "8080"
 	}
 
+	if os.Getenv("CURL_URL") != "" {
+		go pollURL(os.Getenv("CURL_URL"))
+	}
+
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
 		println("starting with slow healthcheck")
 		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
@@ -30,6 +34,21 @@ func main() {
 	} else {
 		println("starting with default server")
 		defaultServer(port)
+	}
+}
+
+func pollURL(url string) {
+	for {
+		resp, err := http.Get(url)
+		if err != nil {
+			fmt.Printf("unable to poll url: %s\n", err)
+			time.Sleep(time.Second)
+			continue
+		}
+
+		fmt.Printf("got status: %d\n", resp.StatusCode)
+
+		time.Sleep(time.Second)
 	}
 }
 
