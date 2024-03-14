@@ -62,7 +62,7 @@ func defaultServer(port string) {
 func serveAtAddr(addr string) {
 	log.Printf("starting http server at %s\n", addr)
 
-	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	log.Fatal(http.ListenAndServe(addr, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
 		if strings.Contains(r.URL.Path, "server-error") {
