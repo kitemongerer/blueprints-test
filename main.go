@@ -18,26 +18,10 @@ func main() {
 		port = "8080"
 	}
 
-	if os.Getenv("CURL_URL") != "" {
-		go pollURL(os.Getenv("CURL_URL"))
-	}
+	conn := startTCP()
+	defer conn.Close()
 
-	if os.Getenv("SLOW_HEALTHCHECK") != "" {
-		println("starting with slow healthcheck")
-		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
-	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
-		println("starting default server, secondary server, and udp server")
-		portDetectorTest()
-	} else if os.Getenv("PORT_DETECTOR_TEST_2") != "" {
-		println("starting port detector test 2")
-		portDetectorTest2(port)
-	} else if os.Getenv("BIND_ADDR") != "" {
-		println("starting with bind addr")
-		serveAtAddr(os.Getenv("BIND_ADDR"))
-	} else {
-		println("starting with default server")
-		defaultServer(port)
-	}
+	defaultServer("8081")
 }
 
 func pollURL(url string) {
@@ -152,12 +136,12 @@ func startUDP() *net.UDPConn {
 }
 
 func startTCP() *net.TCPListener {
-	s, err := net.ResolveTCPAddr("tcp", ":0")
+	s, err := net.ResolveTCPAddr("tcp6", ":0")
 	if err != nil {
 		log.Fatalf("error resolving addr on udp: %s", err)
 	}
 
-	conn, err := net.ListenTCP("tcp", s)
+	conn, err := net.ListenTCP("tcp6", s)
 	if err != nil {
 		log.Fatalf("error listening on udp: %s", err)
 	}
