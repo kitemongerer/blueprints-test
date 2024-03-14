@@ -31,6 +31,9 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST_2") != "" {
 		println("starting port detector test 2")
 		portDetectorTest2(port)
+	} else if os.Getenv("BIND_ADDR") != "" {
+		println("starting with bind addr")
+		serveAtAddr(os.Getenv("BIND_ADDR"))
 	} else {
 		println("starting with default server")
 		defaultServer(port)
@@ -53,7 +56,11 @@ func pollURL(url string) {
 }
 
 func defaultServer(port string) {
-	log.Printf("starting http server at %s\n", port)
+	serveAtAddr(":" + port)
+}
+
+func serveAtAddr(addr string) {
+	log.Printf("starting http server at %s\n", addr)
 
 	log.Fatal(http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
