@@ -21,7 +21,28 @@ func main() {
 	conn := startTCP()
 	defer conn.Close()
 
-	defaultServer("8081")
+	srv := &http.Server{Addr: conn.Addr().String(), Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("received request at %s\n", r.URL.Path)
+
+		if strings.Contains(r.URL.Path, "server-error") {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if strings.Contains(r.URL.Path, "panic") {
+			panic(string(debug.Stack()))
+			return
+		}
+		if strings.Contains(r.URL.Path, "exit") {
+			os.Exit(17)
+		}
+		if strings.Contains(r.URL.Path, "oom") {
+			go oom()
+			w.Write([]byte("started oom loop"))
+		}
+		w.Write([]byte("hi"))
+	})}
+
+	log.Fatal(srv.Serve(conn))
 }
 
 func pollURL(url string) {
