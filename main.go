@@ -62,7 +62,8 @@ func defaultServer(port string) {
 func serveAtAddr(addr string) {
 	log.Printf("starting http server at %s\n", addr)
 
-	log.Fatal(http.ListenAndServe(addr, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var server *http.Server
+	server = &http.Server{Addr: addr, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
 		if strings.Contains(r.URL.Path, "server-error") {
@@ -76,12 +77,18 @@ func serveAtAddr(addr string) {
 		if strings.Contains(r.URL.Path, "exit") {
 			os.Exit(17)
 		}
+		if strings.Contains(r.URL.Path, "stop") {
+			w.WriteHeader(http.StatusOK)
+			server.Close()
+		}
 		if strings.Contains(r.URL.Path, "oom") {
 			go oom()
 			w.Write([]byte("started oom loop"))
 		}
 		w.Write([]byte("hi"))
-	})))
+	})}
+
+	log.Println(server.ListenAndServe())
 }
 
 func slowHealthcheck(port string, duration string) {
