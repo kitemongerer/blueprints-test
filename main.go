@@ -31,6 +31,11 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST_2") != "" {
 		println("starting port detector test 2")
 		portDetectorTest2(port)
+	} else if os.Getenv("PORT_DETECTOR_TEST_MULTI") != "" {
+		println("starting port detector test multi port")
+		go defaultServer("8082")
+		go defaultServer("8083")
+		defaultServer("8084")
 	} else if os.Getenv("BIND_ADDR") != "" {
 		println("starting with bind addr")
 		serveAtAddr(os.Getenv("BIND_ADDR"))
