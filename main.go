@@ -25,12 +25,15 @@ func main() {
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
 		println("starting with slow healthcheck")
 		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
+	} else if os.Getenv("PORT_DETECTOR_TEST") == "2" {
+		println("starting port detector test 2")
+		portDetectorTest2(port)
+	} else if os.Getenv("PORT_DETECTOR_TEST") == "3" {
+		println("starting port detector test 3")
+		portDetectorTest3(port)
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
-	} else if os.Getenv("PORT_DETECTOR_TEST_2") != "" {
-		println("starting port detector test 2")
-		portDetectorTest2(port)
 	} else if os.Getenv("PORT_DETECTOR_TEST_MULTI") != "" {
 		println("starting port detector test multi port")
 		go defaultServer("8082")
@@ -148,6 +151,17 @@ func portDetectorTest() {
 func portDetectorTest2(port string) {
 	go defaultServer("10001")
 	defaultServer(port)
+}
+
+func portDetectorTest3(port string) {
+	go defaultServer("10001")
+
+	err := http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}))
+
+	log.Fatalf("error listening on port %s: %s", port, err)
 }
 
 func startUDP() *net.UDPConn {
