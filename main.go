@@ -34,11 +34,9 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
-	} else if os.Getenv("PORT_DETECTOR_TEST_MULTI") != "" {
-		println("starting port detector test multi port")
-		go defaultServer("8082")
-		go defaultServer("8083")
-		defaultServer("8084")
+	} else if os.Getenv("PORTS") != "" {
+		println("starting for ports")
+		startPorts(os.Getenv("PORTS"))
 	} else if os.Getenv("BIND_ADDR") != "" {
 		println("starting with bind addr")
 		serveAtAddr(os.Getenv("BIND_ADDR"))
@@ -188,4 +186,18 @@ func startTCP() *net.TCPListener {
 		log.Fatalf("error listening on udp: %s", err)
 	}
 	return conn
+}
+
+func startPorts(portsList string) {
+	ports := strings.Split(portsList, ",")
+
+	if len(ports) > 1 {
+		for _, p := range ports[1:] {
+			fmt.Printf("starting server on port: %s\n", p)
+			go defaultServer(p)
+		}
+	}
+
+	fmt.Printf("starting server on port: %s\n", ports[0])
+	defaultServer(ports[0])
 }
