@@ -93,7 +93,7 @@ func serveAtAddr(addr string) {
 			go oom()
 			w.Write([]byte("started oom loop"))
 		}
-		w.Write([]byte("hi"))
+		w.Write([]byte("hi from: " + server.Addr))
 	})}
 
 	log.Println(server.ListenAndServe())
