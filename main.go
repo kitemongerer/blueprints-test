@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -56,6 +57,11 @@ func pollURL(url string) {
 		}
 
 		fmt.Printf("got status: %d\n", resp.StatusCode)
+
+		bs, err := io.ReadAll(resp.Body)
+		if err == nil {
+			fmt.Printf("got body: %s\n", string(bs))
+		}
 
 		time.Sleep(time.Second)
 	}
