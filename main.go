@@ -8,8 +8,10 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"runtime/debug"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -72,9 +74,13 @@ func serveInterfaces() {
 			case *net.IPAddr:
 				ip = v.IP
 			}
-			serveAtAddr(fmt.Sprintf("%s:%d", ip, startPort+idx))
+			go serveAtAddr(fmt.Sprintf("%s:%d", ip, startPort+idx))
 		}
 	}
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	<-sigs
+	fmt.Println("received exit signal")
 }
 
 func pollURL(url string) {
