@@ -41,9 +41,39 @@ func main() {
 	} else if os.Getenv("BIND_ADDR") != "" {
 		println("starting with bind addr")
 		serveAtAddr(os.Getenv("BIND_ADDR"))
+	} else if os.Getenv("ALL_INTERFACES") != "" {
+		println("starting on each interface")
+		serveInterfaces()
 	} else {
 		println("starting with default server")
 		defaultServer(port)
+	}
+}
+
+func serveInterfaces() {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		panic(err)
+	}
+
+	startPort := 8000
+	for idx, i := range ifaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			println(err)
+			continue
+		}
+		// handle err
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			serveAtAddr(fmt.Sprintf("%s:%d", ip, startPort+idx))
+		}
 	}
 }
 
