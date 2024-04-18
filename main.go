@@ -16,10 +16,7 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
+	port := "8080"
 
 	if os.Getenv("CURL_URL") != "" {
 		go pollURL(os.Getenv("CURL_URL"))
