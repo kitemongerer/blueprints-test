@@ -25,30 +25,39 @@ func main() {
 		go pollURL(os.Getenv("CURL_URL"))
 	}
 
-	if os.Getenv("SLOW_HEALTHCHECK") != "" {
-		println("starting with slow healthcheck")
-		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
-	} else if os.Getenv("PORT_DETECTOR_TEST") == "2" {
-		println("starting port detector test 2")
-		portDetectorTest2(port)
-	} else if os.Getenv("PORT_DETECTOR_TEST") == "3" {
-		println("starting port detector test 3")
-		portDetectorTest3(port)
-	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
-		println("starting default server, secondary server, and udp server")
-		portDetectorTest()
-	} else if os.Getenv("PORTS") != "" {
-		println("starting for ports")
-		startPorts(os.Getenv("PORTS"))
-	} else if os.Getenv("BIND_ADDR") != "" {
-		println("starting with bind addr")
-		serveAtAddr(os.Getenv("BIND_ADDR"))
-	} else if os.Getenv("ALL_INTERFACES") != "" {
-		println("starting on each interface")
-		serveInterfaces()
-	} else {
-		println("starting with default server")
-		defaultServer(port)
+	println("starting with default server")
+	go defaultServer(port)
+
+	for {
+		var server *http.Server
+		server = &http.Server{Addr: ":0", Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			fmt.Printf("received request at %s\n", r.URL.Path)
+
+			if strings.Contains(r.URL.Path, "server-error") {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			if strings.Contains(r.URL.Path, "panic") {
+				panic(string(debug.Stack()))
+				return
+			}
+			if strings.Contains(r.URL.Path, "exit") {
+				os.Exit(17)
+			}
+			if strings.Contains(r.URL.Path, "stop") {
+				w.WriteHeader(http.StatusOK)
+				server.Close()
+			}
+			if strings.Contains(r.URL.Path, "oom") {
+				go oom()
+				w.Write([]byte("started oom loop"))
+			}
+			w.Write([]byte("hi from: " + server.Addr))
+		})}
+
+		go server.ListenAndServe()
+		time.Sleep(5 * time.Second)
+		server.Close()
 	}
 }
 
