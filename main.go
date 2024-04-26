@@ -19,10 +19,10 @@ func main() {
 	go func() {
 		i := 0
 		for {
-			log.Printf("%d ******************\n\n", i)
+			log.Printf("%d ******************\n", i)
 			i++
 
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(time.Second)
 		}
 	}()
 
