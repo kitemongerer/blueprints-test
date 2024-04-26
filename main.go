@@ -20,7 +20,6 @@ func main() {
 		i := 0
 		for {
 			log.Printf("%d ******************\n\n", i)
-			log.Printf(`{"level": "info", "msg": "%d ********************"}\n\n`, i)
 			i++
 
 			time.Sleep(100 * time.Millisecond)
