@@ -16,40 +16,19 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
+	go func() {
+		i := 0
+		for {
+			fmt.Printf("%d ******************\n", i)
+			fmt.Printf(`{"level": "info", "msg": "%d ********************"}\n`, i)
+			i++
+		}
+	}()
 
-	if os.Getenv("CURL_URL") != "" {
-		go pollURL(os.Getenv("CURL_URL"))
-	}
-
-	if os.Getenv("SLOW_HEALTHCHECK") != "" {
-		println("starting with slow healthcheck")
-		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
-	} else if os.Getenv("PORT_DETECTOR_TEST") == "2" {
-		println("starting port detector test 2")
-		portDetectorTest2(port)
-	} else if os.Getenv("PORT_DETECTOR_TEST") == "3" {
-		println("starting port detector test 3")
-		portDetectorTest3(port)
-	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
-		println("starting default server, secondary server, and udp server")
-		portDetectorTest()
-	} else if os.Getenv("PORTS") != "" {
-		println("starting for ports")
-		startPorts(os.Getenv("PORTS"))
-	} else if os.Getenv("BIND_ADDR") != "" {
-		println("starting with bind addr")
-		serveAtAddr(os.Getenv("BIND_ADDR"))
-	} else if os.Getenv("ALL_INTERFACES") != "" {
-		println("starting on each interface")
-		serveInterfaces()
-	} else {
-		println("starting with default server")
-		defaultServer(port)
-	}
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	<-sigs
+	fmt.Println("received exit signal")
 }
 
 func serveInterfaces() {
