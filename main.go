@@ -26,10 +26,7 @@ func main() {
 		}
 	}()
 
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-	<-sigs
-	fmt.Println("received exit signal")
+	defaultServer("8080")
 }
 
 func serveInterfaces() {
