@@ -19,9 +19,11 @@ func main() {
 	go func() {
 		i := 0
 		for {
-			fmt.Printf("%d ******************\n", i)
-			fmt.Printf(`{"level": "info", "msg": "%d ********************"}\n`, i)
+			fmt.Printf("%d ******************\n\n", i)
+			fmt.Printf(`{"level": "info", "msg": "%d ********************"}\n\n`, i)
 			i++
+
+			time.Sleep(100 * time.Millisecond)
 		}
 	}()
 
