@@ -3,7 +3,7 @@ services:
     name: blueprint-test
     runtime: static
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    branch: main # optional (defaults to master)
+    branch: "max/blueprint-static"
     buildCommand: "true"
     staticPublishPath: "./"
     headers:
