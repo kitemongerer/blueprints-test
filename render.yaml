@@ -10,10 +10,13 @@ services:
     - path: /*
       name: X-Frame-Options
       value: sameorigin
+    - path: /*
+      name: something-else
+      value: sameorigin
     routes:
     - type: redirect
       source: /old
       destination: /new
     - type: rewrite
-      source: /a/*
+      source: /b/*
       destination: /a
