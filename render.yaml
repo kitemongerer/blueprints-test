@@ -1,31 +1,19 @@
-previewsEnabled: true
 services:
-  - type: cron
-    name: blueprint-test-cron
-    runtime: go
-    schedule: "0 * * * *"
-    buildCommand: "true" # ensure it's a string
-    startCommand: "exit 1"
   - type: web
-    name: blueprint-test-crash-loop
-    runtime: go
+    name: blueprint-test
+    runtime: static
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
     branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
-    envVars:
-      - key: SLOW_HEALTHCHECK
-        value: "1m"
-  - type: web
-    name: blueprint-test-healthy
-    runtime: go
-    repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
+    buildCommand: "true"
+    staticPublishPath: "./"
+    headers:
+    - path: /*
+      name: X-Frame-Options
+      value: sameorigin
+    routes:
+    - type: redirect
+      source: /old
+      destination: /new
+    - type: rewrite
+      source: /a/*
+      destination: /a
