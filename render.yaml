@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: blueprint-test
+    name: blueprint-test-static
     runtime: static
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
     branch: "max/blueprint-static"
