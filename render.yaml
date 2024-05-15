@@ -5,8 +5,10 @@ services:
     schedule: "0 * * * *"
     buildCommand: "true" # ensure it's a string
     startCommand: "exit 1"
+    autoDeploy: false
   - type: web
     name: blueprint-test-crash-loop
+    autoDeploy: false
     runtime: go
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
     region: oregon # optional (defaults to oregon)
@@ -20,6 +22,7 @@ services:
         value: "1m"
   - type: web
     name: blueprint-test-healthy
+    autoDeploy: false
     runtime: go
     repo: https://github.com/kitemongerer/blueprints-test.git # optional
     region: oregon # optional (defaults to oregon)
