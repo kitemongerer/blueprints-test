@@ -20,6 +20,8 @@ services:
     envVars:
       - key: SLOW_HEALTHCHECK
         value: "1m"
+      - key: "NEW_ENV_VAR"
+        value: "7"
   - type: web
     name: blueprint-test-healthy
     autoDeploy: false
