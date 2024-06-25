@@ -5,6 +5,7 @@ services:
     buildCommand: "true" # ensure it's a string
     startCommand: "true"
     autoDeploy: false
+    schedule: "*/10 * * * *"
   - type: web
     name: blueprint-test-crash-loop
     autoDeploy: false
