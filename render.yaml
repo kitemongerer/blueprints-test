@@ -3,7 +3,7 @@ services:
     name: blueprint-test-cron
     runtime: go
     buildCommand: "true" # ensure it's a string
-    startCommand: "exit 1"
+    startCommand: "true"
     autoDeploy: false
   - type: web
     name: blueprint-test-crash-loop
