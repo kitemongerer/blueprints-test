@@ -34,6 +34,9 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST") == "3" {
 		println("starting port detector test 3")
 		portDetectorTest3(port)
+	} else if os.Getenv("PORT_DETECTOR_TEST") == "4" {
+		println("starting port detector test ephemeral ports")
+		portDetectorTestEphemeralPorts()
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
@@ -202,6 +205,21 @@ func portDetectorTest3(port string) {
 	}))
 
 	log.Fatalf("error listening on port %s: %s", port, err)
+}
+
+func portDetectorTestEphemeralPorts() {
+	go defaultServer("8082")
+	time.Sleep(5 * time.Second)
+
+	for {
+		udp := startUDP()
+		tcp := startTCP()
+
+		time.Sleep(30 * time.Second)
+		udp.Close()
+		tcp.Close()
+	}
+
 }
 
 func startUDP() *net.UDPConn {
