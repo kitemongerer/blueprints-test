@@ -255,7 +255,7 @@ func startTCP(port string) *net.TCPListener {
 func startPorts(portsList string) {
 	ports := strings.Split(portsList, ",")
 
-	for _, p := range ports[1:] {
+	for _, p := range ports {
 		protocol := "http"
 		port := p
 
