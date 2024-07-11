@@ -80,6 +80,10 @@ func serveInterfaces() {
 			go serveAtAddr(fmt.Sprintf("%s:%d", ip, startPort+idx))
 		}
 	}
+	waitForExit()
+}
+
+func waitForExit() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	<-sigs
@@ -251,38 +255,34 @@ func startTCP(port string) *net.TCPListener {
 func startPorts(portsList string) {
 	ports := strings.Split(portsList, ",")
 
-	if len(ports) > 1 {
-		for _, p := range ports[1:] {
-			protocol := "http"
-			port := p
+	for _, p := range ports[1:] {
+		protocol := "http"
+		port := p
 
-			if strings.Contains(p, ":") {
-				parts := strings.Split(p, ":")
-				if len(parts) != 2 {
-					log.Fatalf("invalid port: %s", p)
-				}
-
-				protocol = strings.ToLower(parts[0])
-				port = parts[1]
-
-				switch protocol {
-				case "http":
-					fmt.Printf("starting HTTP server on port: %s\n", port)
-					go defaultServer(port)
-				case "tcp":
-					fmt.Printf("starting TCP server on port: %s\n", port)
-					go startTCP(port)
-				case "udp":
-					fmt.Printf("starting UDP server on port: %s\n", port)
-					go startUDP(port)
-				default:
-					log.Fatalf("invalid protocol: %s", protocol)
-				}
+		if strings.Contains(p, ":") {
+			parts := strings.Split(p, ":")
+			if len(parts) != 2 {
+				log.Fatalf("invalid port: %s", p)
 			}
 
+			protocol = strings.ToLower(parts[0])
+			port = parts[1]
+
+			switch protocol {
+			case "http":
+				fmt.Printf("starting HTTP server on port: %s\n", port)
+				go defaultServer(port)
+			case "tcp":
+				fmt.Printf("starting TCP server on port: %s\n", port)
+				go startTCP(port)
+			case "udp":
+				fmt.Printf("starting UDP server on port: %s\n", port)
+				go startUDP(port)
+			default:
+				log.Fatalf("invalid protocol: %s", protocol)
+			}
 		}
 	}
 
-	fmt.Printf("starting server on port: %s\n", ports[0])
-	defaultServer(ports[0])
+	waitForExit()
 }
