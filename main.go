@@ -180,10 +180,10 @@ func portDetectorTest() {
 	go defaultServer("8082")
 	time.Sleep(5 * time.Second)
 
-	udp := startUDP()
+	udp := startUDP("0")
 	defer udp.Close()
 
-	tcp := startTCP()
+	tcp := startTCP("0")
 	defer tcp.Close()
 
 	// ensure port detector finds delayed ports
@@ -212,8 +212,8 @@ func portDetectorTestEphemeralPorts() {
 	time.Sleep(5 * time.Second)
 
 	for {
-		udp := startUDP()
-		tcp := startTCP()
+		udp := startUDP("0")
+		tcp := startTCP("0")
 
 		time.Sleep(30 * time.Second)
 		udp.Close()
@@ -222,8 +222,8 @@ func portDetectorTestEphemeralPorts() {
 
 }
 
-func startUDP() *net.UDPConn {
-	s, err := net.ResolveUDPAddr("udp6", ":0")
+func startUDP(port string) *net.UDPConn {
+	s, err := net.ResolveUDPAddr("udp6", ":"+port)
 	if err != nil {
 		log.Fatalf("error resolving addr on udp: %s", err)
 	}
@@ -235,15 +235,15 @@ func startUDP() *net.UDPConn {
 	return conn
 }
 
-func startTCP() *net.TCPListener {
-	s, err := net.ResolveTCPAddr("tcp", ":0")
+func startTCP(port string) *net.TCPListener {
+	s, err := net.ResolveTCPAddr("tcp", ":"+port)
 	if err != nil {
-		log.Fatalf("error resolving addr on udp: %s", err)
+		log.Fatalf("error resolving addr on tcp: %s", err)
 	}
 
 	conn, err := net.ListenTCP("tcp", s)
 	if err != nil {
-		log.Fatalf("error listening on udp: %s", err)
+		log.Fatalf("error listening on tcp: %s", err)
 	}
 	return conn
 }
@@ -253,8 +253,33 @@ func startPorts(portsList string) {
 
 	if len(ports) > 1 {
 		for _, p := range ports[1:] {
-			fmt.Printf("starting server on port: %s\n", p)
-			go defaultServer(p)
+			protocol := "http"
+			port := p
+
+			if strings.Contains(p, ":") {
+				parts := strings.Split(p, ":")
+				if len(parts) != 2 {
+					log.Fatalf("invalid port: %s", p)
+				}
+
+				protocol = strings.ToLower(parts[0])
+				port = parts[1]
+
+				switch protocol {
+				case "http":
+					fmt.Printf("starting HTTP server on port: %s\n", port)
+					go defaultServer(port)
+				case "tcp":
+					fmt.Printf("starting TCP server on port: %s\n", port)
+					go startTCP(port)
+				case "udp":
+					fmt.Printf("starting UDP server on port: %s\n", port)
+					go startUDP(port)
+				default:
+					log.Fatalf("invalid protocol: %s", protocol)
+				}
+			}
+
 		}
 	}
 
