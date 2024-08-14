@@ -37,6 +37,9 @@ func main() {
 	} else if os.Getenv("PORT_DETECTOR_TEST") == "4" {
 		println("starting port detector test ephemeral ports")
 		portDetectorTestEphemeralPorts()
+	} else if os.Getenv("PORT_DETECTOR_TEST") == "5" {
+		println("starting port detector test listening on TCP pausing, and then HTTP")
+		listenWaitThenServe(port)
 	} else if os.Getenv("PORT_DETECTOR_TEST") != "" {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
@@ -117,6 +120,12 @@ func defaultServer(port string) {
 func serveAtAddr(addr string) {
 	log.Printf("starting http server at %s\n", addr)
 
+	server := defaultHTTPServer(addr)
+
+	log.Println(server.ListenAndServe())
+}
+
+func defaultHTTPServer(addr string) *http.Server {
 	var server *http.Server
 	server = &http.Server{Addr: addr, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
@@ -142,8 +151,14 @@ func serveAtAddr(addr string) {
 		}
 		w.Write([]byte("hi from: " + server.Addr))
 	})}
+	return server
+}
 
-	log.Println(server.ListenAndServe())
+func listenWaitThenServe(port string) {
+	var server *http.Server
+	l := startTCP(port)
+	time.Sleep(30 * time.Second)
+	log.Println(server.Serve(l))
 }
 
 func slowHealthcheck(port string, duration string) {
