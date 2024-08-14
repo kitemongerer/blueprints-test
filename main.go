@@ -155,7 +155,7 @@ func defaultHTTPServer(addr string) *http.Server {
 }
 
 func listenWaitThenServe(port string) {
-	var server *http.Server
+	server := defaultHTTPServer(":" + port)
 	l := startTCP(port)
 	time.Sleep(30 * time.Second)
 	log.Println(server.Serve(l))
