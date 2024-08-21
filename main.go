@@ -52,9 +52,22 @@ func main() {
 	} else if os.Getenv("ALL_INTERFACES") != "" {
 		println("starting on each interface")
 		serveInterfaces()
+	} else if os.Getenv("LOG_SPAM") != "" {
+		println("starting log spam")
+		go spamLogs()
+		defaultServer(port)
 	} else {
 		println("starting with default server")
 		defaultServer(port)
+	}
+}
+
+func spamLogs() {
+	var i int
+	for {
+		fmt.Printf("LOG NUMBER %d\n", i)
+		i++
+		time.Sleep(time.Millisecond)
 	}
 }
 
