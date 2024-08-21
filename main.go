@@ -67,7 +67,7 @@ func spamLogs() {
 	for {
 		fmt.Printf("LOG NUMBER %d\n", i)
 		i++
-		time.Sleep(time.Millisecond)
+		time.Sleep(time.Second)
 	}
 }
 
