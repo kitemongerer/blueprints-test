@@ -296,20 +296,20 @@ func startPorts(portsList string) {
 
 			protocol = strings.ToLower(parts[0])
 			port = parts[1]
+		}
 
-			switch protocol {
-			case "http":
-				fmt.Printf("starting HTTP server on port: %s\n", port)
-				go defaultServer(port)
-			case "tcp":
-				fmt.Printf("starting TCP server on port: %s\n", port)
-				go startTCP(port)
-			case "udp":
-				fmt.Printf("starting UDP server on port: %s\n", port)
-				go startUDP(port)
-			default:
-				log.Fatalf("invalid protocol: %s", protocol)
-			}
+		switch protocol {
+		case "http":
+			fmt.Printf("starting HTTP server on port: %s\n", port)
+			go defaultServer(port)
+		case "tcp":
+			fmt.Printf("starting TCP server on port: %s\n", port)
+			go startTCP(port)
+		case "udp":
+			fmt.Printf("starting UDP server on port: %s\n", port)
+			go startUDP(port)
+		default:
+			log.Fatalf("invalid protocol: %s", protocol)
 		}
 	}
 
