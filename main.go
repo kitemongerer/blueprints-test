@@ -44,8 +44,9 @@ func main() {
 		println("starting default server, secondary server, and udp server")
 		portDetectorTest()
 	} else if os.Getenv("PORTS") != "" {
-		println("starting for ports")
-		startPorts(os.Getenv("PORTS"))
+		ports := os.Getenv("PORTS")
+		println("starting for ports: " + ports)
+		startPorts(ports)
 	} else if os.Getenv("BIND_ADDR") != "" {
 		println("starting with bind addr")
 		serveAtAddr(os.Getenv("BIND_ADDR"))
