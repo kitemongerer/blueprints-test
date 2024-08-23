@@ -55,7 +55,11 @@ func main() {
 		serveInterfaces()
 	} else if os.Getenv("LOG_SPAM") != "" {
 		println("starting log spam")
-		go spamLogs()
+		d, err := time.ParseDuration(os.Getenv("LOG_SPAM"))
+		if err != nil {
+			d = time.Second
+		}
+		go spamLogs(d)
 		defaultServer(port)
 	} else {
 		println("starting with default server")
@@ -63,12 +67,12 @@ func main() {
 	}
 }
 
-func spamLogs() {
+func spamLogs(d time.Duration) {
 	var i int
 	for {
 		fmt.Printf("LOG NUMBER %d\n", i)
 		i++
-		time.Sleep(time.Second)
+		time.Sleep(d)
 	}
 }
 
