@@ -53,6 +53,9 @@ func main() {
 	} else if os.Getenv("ALL_INTERFACES") != "" {
 		println("starting on each interface")
 		serveInterfaces()
+	} else if os.Getenv("PANIC_EVERY") != "" {
+		go panicEvery(os.Getenv("PANIC_EVERY"))
+		defaultServer(port)
 	} else if os.Getenv("LOG_SPAM") != "" {
 		println("starting log spam")
 		d, err := time.ParseDuration(os.Getenv("LOG_SPAM"))
@@ -65,6 +68,16 @@ func main() {
 		println("starting with default server")
 		defaultServer(port)
 	}
+}
+
+func panicEvery(getenv string) {
+	dur, err := time.ParseDuration(getenv)
+	if err != nil {
+		dur = time.Minute
+	}
+
+	time.Sleep(dur)
+	panic("time to panic")
 }
 
 func spamLogs(d time.Duration) {
