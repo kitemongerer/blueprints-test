@@ -21,6 +21,8 @@ func main() {
 		port = "8080"
 	}
 
+	time.Sleep(60 * time.Second)
+
 	if os.Getenv("CURL_URL") != "" {
 		go pollURL(os.Getenv("CURL_URL"))
 	}
