@@ -2,6 +2,7 @@ FROM tiltdev/restart-helper:2024-06-06 as restart-helper
 
 FROM golang:1.22
 
+WORKDIR /opt/render/project
 COPY . .
 RUN \
   CGO_ENABLED=0 \
@@ -13,9 +14,6 @@ RUN \
   -ldflags '-s -w' \
   -o app \
   ./main.go
-
-RUN mkdir -p /opt/render/project/
-COPY . /opt/render/project/
 
 RUN mkdir -p /home/render
 RUN touch /home/render/.restart-proc
