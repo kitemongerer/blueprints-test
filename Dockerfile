@@ -2,6 +2,7 @@ FROM tiltdev/restart-helper:2024-06-06 as restart-helper
 
 FROM golang:1.22 as rebuild-helper
 
+WORKDIR /
 COPY . .
 RUN \
   CGO_ENABLED=0 \
