@@ -14,8 +14,9 @@ RUN \
   -o app \
   ./main.go
 
-RUN ["touch", "/home/render/.restart-proc"]
-RUN ["chmod", "666", "/home/render/.restart-proc"]
+RUN mkdir -p /home/render
+RUN touch /home/render/.restart-proc
+RUN chmod 666 /home/render/.restart-proc
 COPY --from=restart-helper /tilt-restart-wrapper /home/render/
 COPY --from=restart-helper /entr /home/render/
 
