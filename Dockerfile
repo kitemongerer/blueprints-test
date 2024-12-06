@@ -14,6 +14,9 @@ RUN \
   -o app \
   ./main.go
 
+RUN mkdir -p /opt/render/project/
+COPY . /opt/render/project/
+
 RUN mkdir -p /home/render
 RUN touch /home/render/.restart-proc
 RUN chmod 666 /home/render/.restart-proc
