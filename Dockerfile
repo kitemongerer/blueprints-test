@@ -37,4 +37,4 @@ COPY --from=restart-helper /tilt-restart-wrapper /home/render/
 COPY --from=restart-helper /entr /home/render/
 COPY --from=rebuild-helper /rebuilder /home/render/
 
-ENTRYPOINT /home/render/rebuilder && /home/render/tilt-restart-wrapper --watch_file=/home/render/.restart-proc --entr_path /home/render/entr ./app
+ENTRYPOINT /home/render/rebuilder & /home/render/tilt-restart-wrapper --watch_file=/home/render/.restart-proc --entr_path /home/render/entr ./app
