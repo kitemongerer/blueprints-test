@@ -14,9 +14,9 @@ RUN \
   -o app \
   ./main.go
 
-RUN ["touch", "/tmp/.restart-proc"]
-RUN ["chmod", "666", "/tmp/.restart-proc"]
-COPY --from=restart-helper --chown=1000:1000 /tilt-restart-wrapper /home/render/
-COPY --from=restart-helper --chown=1000:1000 /entr /home/render/
+RUN ["touch", "/home/render/.restart-proc"]
+RUN ["chmod", "666", "/home/render/.restart-proc"]
+COPY --from=restart-helper /tilt-restart-wrapper /home/render/
+COPY --from=restart-helper /entr /home/render/
 
-ENTRYPOINT /home/render/tilt-restart-wrapper --watch_file=/tmp/.restart-proc --entr_path /home/render/entr ./app
+ENTRYPOINT /home/render/tilt-restart-wrapper --watch_file=/home/render/.restart-proc --entr_path /home/render/entr ./app
