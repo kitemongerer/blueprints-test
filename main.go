@@ -161,6 +161,12 @@ func defaultHTTPServer(addr string) *http.Server {
 	server = &http.Server{Addr: addr, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("received request at %s\n", r.URL.Path)
 
+		if strings.Contains(r.URL.Path, "webhook") {
+			body, _ := io.ReadAll(r.Body)
+			fmt.Printf("received webhook body: %s\n", string(body))
+			return
+		}
+
 		if strings.Contains(r.URL.Path, "server-error") {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
