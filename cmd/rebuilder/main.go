@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/fsnotify/fsnotify"
 )
 
 // main
 func main() {
+	watchDir := os.Getenv("RENDER_WATCH_DIR")
+	if watchDir == "" {
+		watchDir = "/opt/render/project"
+	}
 
 	// creates a new file watcher
 	watcher, err := fsnotify.NewWatcher()
@@ -35,7 +40,7 @@ func main() {
 	}()
 
 	// out of the box fsnotify can watch a single file, or a single directory
-	if err := watcher.Add("/opt/render/project"); err != nil {
+	if err := watcher.Add(watchDir); err != nil {
 		fmt.Println("ERROR", err)
 	}
 
