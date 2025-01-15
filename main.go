@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
@@ -14,6 +15,8 @@ import (
 	"syscall"
 	"time"
 )
+
+var randomWebhookStatusCode = os.Getenv("RANDOM_WEBHOOK_STATUS_CODE")
 
 func main() {
 	port := os.Getenv("PORT")
@@ -164,6 +167,16 @@ func defaultHTTPServer(addr string) *http.Server {
 		if strings.Contains(r.URL.Path, "webhook") {
 			body, _ := io.ReadAll(r.Body)
 			fmt.Printf("received webhook body: %s\n", string(body))
+
+			statusCode := http.StatusOK
+			if randomWebhookStatusCode != "" {
+				statusCode = 100 + rand.Intn(400)
+			}
+
+			fmt.Printf("responding with status code: %d\n", statusCode)
+
+			w.WriteHeader(statusCode)
+			w.Write([]byte("response body"))
 			return
 		}
 
