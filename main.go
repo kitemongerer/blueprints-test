@@ -176,7 +176,7 @@ func defaultHTTPServer(addr string) *http.Server {
 			fmt.Printf("responding with status code: %d\n", statusCode)
 
 			w.WriteHeader(statusCode)
-			w.Write([]byte("response body"))
+			w.Write([]byte(`{"response": "body"}`))
 			return
 		}
 
