@@ -28,6 +28,15 @@ func main() {
 		go pollURL(os.Getenv("CURL_URL"))
 	}
 
+	if os.Getenv("LOG_SPAM") != "" {
+		println("starting log spam")
+		d, err := time.ParseDuration(os.Getenv("LOG_SPAM"))
+		if err != nil {
+			d = time.Second
+		}
+		go spamLogs(d)
+	}
+
 	if os.Getenv("SLOW_HEALTHCHECK") != "" {
 		println("starting with slow healthcheck")
 		slowHealthcheck(port, os.Getenv("SLOW_HEALTHCHECK"))
@@ -58,14 +67,6 @@ func main() {
 		serveInterfaces()
 	} else if os.Getenv("PANIC_EVERY") != "" {
 		go panicEvery(os.Getenv("PANIC_EVERY"))
-		defaultServer(port)
-	} else if os.Getenv("LOG_SPAM") != "" {
-		println("starting log spam")
-		d, err := time.ParseDuration(os.Getenv("LOG_SPAM"))
-		if err != nil {
-			d = time.Second
-		}
-		go spamLogs(d)
 		defaultServer(port)
 	} else {
 		println("starting with default server")
