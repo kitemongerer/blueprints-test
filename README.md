@@ -1,2 +1,3 @@
 # blueprints-test
 go
+go
