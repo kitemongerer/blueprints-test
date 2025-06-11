@@ -55,7 +55,7 @@ COPY --chown=appuser:appuser ./agent.json /app/agent.json
 # Configuration for the server
 COPY --chown=appuser:appuser ./agent.yaml /app/agent.yaml
 # Custom FastAPI A2A server
-COPY --chown=appuser:appuser ./server.py /app/server.py
+# COPY --chown=appuser:appuser ./server.py /app/server.py
 # Copy the entrypoint script (Temporarily comment out as we are testing a barebones ENTRYPOINT)
 # COPY --chown=appuser:appuser ./entrypoint.sh /app/entrypoint.sh
 
