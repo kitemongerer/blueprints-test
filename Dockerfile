@@ -45,25 +45,7 @@ RUN groupadd -r appuser && useradd --no-log-init -r -g appuser appuser
 
 WORKDIR /app
 
-# Copy the virtual environment from the builder stage
-COPY --from=builder /app_build/.venv ${VENV_PATH}
 
-# Copy the application code
-COPY --chown=appuser:appuser ./prospectresearchagent_agent.py /app/prospectresearchagent_agent.py
-# This is the A2A card definition
-COPY --chown=appuser:appuser ./agent.json /app/agent.json
-# Configuration for the server
-COPY --chown=appuser:appuser ./agent.yaml /app/agent.yaml
-# Custom FastAPI A2A server
-# COPY --chown=appuser:appuser ./server.py /app/server.py
-# Copy the entrypoint script (Temporarily comment out as we are testing a barebones ENTRYPOINT)
-# COPY --chown=appuser:appuser ./entrypoint.sh /app/entrypoint.sh
-
-# Make entrypoint script executable (Temporarily comment out)
-# RUN chmod +x /app/entrypoint.sh
-
-# Ensure correct ownership for all app files
-RUN chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
