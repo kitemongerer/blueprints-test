@@ -200,7 +200,7 @@ func defaultHTTPServer(addr string) *http.Server {
 			go oom()
 			w.Write([]byte("started oom loop"))
 		}
-		w.Write([]byte("hi from: " + server.Addr))
+		w.Write([]byte("hi from " + os.Getenv("RENDER_SERVICE_NAME") + server.Addr))
 	})}
 	return server
 }
