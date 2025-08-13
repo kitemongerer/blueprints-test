@@ -11,7 +11,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # Final stage
-FROM alpine:latest
+FROM rendermax/blueprints-test:latest
 
 # Install ca-certificates for HTTPS requests
 RUN apk --no-cache add ca-certificates
