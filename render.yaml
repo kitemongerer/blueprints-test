@@ -1,39 +1,105 @@
+# Exported from Render on 2025-09-03T20:51:50Z
 services:
-  - type: cron
-    name: blueprint-test-cron
-    runtime: go
-    schedule: "0 * * * *"
-    buildCommand: "true" # ensure it's a string
-    startCommand: "exit 1"
-    autoDeploy: false
-  - type: web
-    name: blueprint-test-crash-loop
-    autoDeploy: false
-    runtime: go
-    repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
-    envVars:
-      - key: SLOW_HEALTHCHECK
-        value: "1m"
-      - key: "NEW_ENV_VAR"
-        value: "9"
-  - type: web
-    name: blueprint-test-healthy
-    autoDeploy: false
-    runtime: go
-    repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
-
-previews:
-    generation: manual
-    expireAfterDays: 1
+- type: web
+  name: go
+  runtime: go
+  repo: https://github.com/kitemongerer/blueprints-test
+  plan: starter
+  region: oregon
+  buildCommand: go build -tags netgo -ldflags '-s -w' -o app
+  startCommand: ./app
+  preDeployCommand: echo hiiii
+- type: web
+  name: python
+  runtime: python
+  repo: https://github.com/render-examples/flask-hello-world
+  plan: starter
+  region: oregon
+  buildCommand: pip install -r requirements.txt
+  startCommand: which python && python --version && gunicorn app:app
+- type: web
+  name: fastapi-uv
+  runtime: python
+  repo: https://github.com/render-examples/fastapi-uv
+  plan: starter
+  envVars:
+  - key: UV_VERSION
+    sync: false
+  region: oregon
+  buildCommand: ./install.sh
+  startCommand: ./run.sh
+- type: web
+  name: node
+  runtime: node
+  repo: https://github.com/render-examples/express-hello-world
+  plan: starter
+  region: oregon
+  buildCommand: echo "***$(node --version)***" && yarn --frozen-lockfile install
+  startCommand: node app.js
+- type: web
+  name: blueprints-test-1
+  runtime: static
+  repo: https://github.com/kitemongerer/blueprints-test
+  branch: test-static
+  staticPublishPath: ./
+  autoDeploy: false
+- type: web
+  name: bun
+  runtime: node
+  repo: https://github.com/kitemongerer/blueprints-test
+  branch: bun
+  plan: starter
+  envVars:
+  - key: BUN_VERSION
+    sync: false
+  - key: NODE_VERSION
+    sync: false
+  region: oregon
+  buildCommand: echo "***$(node --version)***" && bun install && bun --version
+  startCommand: bun --version && bun app.ts
+- type: web
+  name: elixir_cluster
+  runtime: elixir
+  repo: https://github.com/render-examples/elixir_cluster
+  plan: starter
+  envVars:
+  - key: ELIXIR_VERSION
+    sync: false
+  - key: ERLANG_VERSION
+    sync: false
+  - key: SECRET_KEY_BASE
+    sync: false
+  region: oregon
+  buildCommand: elixir --version && ./build.sh
+  startCommand: _build/prod/rel/elixir_cluster_demo/bin/elixir_cluster_demo start
+- type: web
+  name: myrailssite
+  runtime: ruby
+  repo: https://github.com/render-examples/rails-7
+  plan: starter
+  envVars:
+  - key: DATABASE_URL
+    sync: false
+  - key: SECRET_KEY_BASE
+    sync: false
+  - key: BUN_VERSION
+    sync: false
+  region: oregon
+  buildCommand: ./bin/render-build.sh
+  startCommand: bundle exec puma -C config/puma.rb
+  autoDeploy: false
+- type: web
+  name: docker
+  runtime: docker
+  repo: https://github.com/kitemongerer/blueprints-test
+  plan: starter
+  region: oregon
+  dockerContext: .
+  dockerfilePath: ./Dockerfile
+- type: web
+  name: sveltekit-static
+  runtime: static
+  repo: https://github.com/render-examples/sveltekit-static
+  buildCommand: npm install; npm run build
+  staticPublishPath: ./build
+version: "1"
