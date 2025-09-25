@@ -221,7 +221,7 @@ func slowHealthcheck(port string, duration string) {
 	start := time.Now()
 
 	err = http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("%d seconds request (%s) at %s\n", time.Since(start).Seconds(), r.URL.Path, time.Now().String())
+		fmt.Printf("%f seconds request (%s) at %s\n", time.Since(start).Seconds(), r.URL.Path, time.Now().String())
 
 		if time.Since(start) > dur {
 			println("long request: " + time.Now().String())
