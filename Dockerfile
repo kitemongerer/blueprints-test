@@ -1,4 +1,3 @@
-ARG BASE_IMAGE
 FROM debian:bookworm AS downloader
 USER root
 ## See downloader.dockerfile.template
@@ -38,7 +37,7 @@ RUN mkdir /tmp/bun
 RUN unzip -j /tmp/bun.zip bun-linux-x64-baseline/bun -d /tmp/bun
 RUN chmod a+x /tmp/bun/bun
 
-FROM gcr.io/render-internal/docker-hub-mirror/buildpack-deps:bookworm
+FROM buildpack-deps:bookworm
 
 ARG NODE_VERSION=""
 USER root
