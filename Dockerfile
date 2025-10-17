@@ -251,24 +251,6 @@ RUN apt-get -qq update && \
     /var/tmp/*
 
 USER 1000:1000
-## See envwrapper.dockerfile.template
-COPY --link --chown=1000:1000 envwrappers /home/render/envwrappers
-
-RUN chmod a+x /home/render/envwrappers/*; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/ruby; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/gem; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/bundle; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/node; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/yarn; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/npm; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/pnpm; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/bun; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/python; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/pip; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/pip3; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/python3; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/poetry; \
-  ln -s /home/render/envwrappers/wrapped-native-env /home/render/envwrappers/uv
 
 ## See languageversions.dockerfile.template
 # Store minimum and maintained language versions
