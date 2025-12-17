@@ -1,39 +1,39 @@
 services:
-  - type: cron
-    name: blueprint-test-cron
-    runtime: go
-    schedule: "0 * * * *"
-    buildCommand: "true" # ensure it's a string
-    startCommand: "exit 1"
-    autoDeploy: false
-  - type: web
-    name: blueprint-test-crash-loop
-    autoDeploy: false
-    runtime: go
-    repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
-    envVars:
-      - key: SLOW_HEALTHCHECK
-        value: "1m"
-      - key: "NEW_ENV_VAR"
-        value: "9"
-  - type: web
-    name: blueprint-test-healthy
-    autoDeploy: false
-    runtime: go
-    repo: https://github.com/kitemongerer/blueprints-test.git # optional
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    branch: main # optional (defaults to master)
-    healthCheckPath: /health
-    buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
-    startCommand: "./app"
+- type: cron
+  name: blueprint-test-cron
+  runtime: go
+  schedule: "0 * * * *"
+  buildCommand: "true && echo hi" # ensure it's a string
+  startCommand: "exit 1"
+  autoDeploy: false
+- type: web
+  name: blueprint-test-crash-loop
+  autoDeploy: true
+  runtime: go
+  repo: https://github.com/kitemongerer/blueprints-test.git # optional
+  region: oregon # optional (defaults to oregon)
+  plan: standard # optional (defaults to starter instance type)
+  branch: main # optional (defaults to master)
+  healthCheckPath: /health
+  buildCommand: "echo hi && go build -tags netgo -ldflags '-s -w' -o app"
+  startCommand: "true && ./app"
+  envVars:
+  - key: SLOW_HEALTHCHECK
+    value: "1m"
+  - key: "NEW_ENV_VAR"
+    value: "10"
+- type: web
+  name: blueprint-test-healthy
+  autoDeploy: false
+  runtime: go
+  repo: https://github.com/kitemongerer/blueprints-test.git # optional
+  region: oregon # optional (defaults to oregon)
+  plan: standard # optional (defaults to starter instance type)
+  branch: main # optional (defaults to master)
+  healthCheckPath: /health
+  buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
+  startCommand: "./app"
 
 previews:
-    generation: manual
-    expireAfterDays: 1
+  generation: manual
+  expireAfterDays: 1
