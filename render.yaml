@@ -34,6 +34,7 @@ services:
     healthCheckPath: /health
     buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
     startCommand: "./app"
+    initialDeployHook: "echo 'initial deploy'"
 
 previews:
     generation: manual
