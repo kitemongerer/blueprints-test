@@ -17,6 +17,7 @@ services:
     healthCheckPath: /health
     buildCommand: "go build -tags netgo -ldflags '-s -w' -o app"
     startCommand: "./app"
+    initialDeployCommand: "echo 'initial deploy'"
     envVars:
       - key: SLOW_HEALTHCHECK
         value: "1m"
