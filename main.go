@@ -19,6 +19,7 @@ import (
 var randomWebhookStatusCode = os.Getenv("RANDOM_WEBHOOK_STATUS_CODE")
 
 func main() {
+	println("***********************")
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
